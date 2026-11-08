@@ -1,7 +1,11 @@
 package dev.balusharma;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class Main {
-    static void main() {
-        IO.println("uRl-shortener-spring");
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
     }
 }
