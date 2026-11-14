@@ -19,3 +19,11 @@ spring:
               - openid
               - profile
               - email
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      issuer: ${JWT_ISSUER}
+      audience: ${JWT_AUDIENCE}
+      access-token-expiry-minutes: ${JWT_ACCESS_TOKEN_EXPIRY_MINUTES}
+      refresh-token-expiry-days: ${JWT_REFRESH_TOKEN_EXPIRY_DAYS}
