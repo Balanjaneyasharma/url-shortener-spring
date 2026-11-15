@@ -1,13 +1,10 @@
 package dev.balusharma.urlshortener.application.service;
 
-import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import com.nimbusds.jose.proc.SecurityContext;
 import dev.balusharma.urlshortener.infrastructure.configuration.JwtProperties;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -15,6 +12,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 
+@Service()
 public class JwtService {
     private static final String NAME_IDENTIFIER =
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
@@ -29,26 +27,12 @@ public class JwtService {
     private final JwtProperties jwtProperties;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    public JwtService(JwtProperties jwtProperties) {
+    public JwtService(
+            JwtEncoder jwtEncoder,
+            JwtProperties jwtProperties
+    ) {
+        this.jwtEncoder = jwtEncoder;
         this.jwtProperties = jwtProperties;
-
-        byte[] secretBytes = jwtProperties.secret()
-                .getBytes(StandardCharsets.UTF_8);
-
-        if (secretBytes.length < 32) {
-            throw new IllegalArgumentException(
-                    "JWT secret must contain at least 32 UTF-8 bytes for HS256."
-            );
-        }
-
-        SecretKey secretKey = new SecretKeySpec(
-                secretBytes,
-                "HmacSHA256"
-        );
-
-        this.jwtEncoder = new NimbusJwtEncoder(
-                new ImmutableSecret<SecurityContext>(secretKey)
-        );
     }
 
     public String generateAccessToken(
