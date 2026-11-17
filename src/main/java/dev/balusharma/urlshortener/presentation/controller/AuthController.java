@@ -6,8 +6,9 @@ import dev.balusharma.urlshortener.domain.model.User;
 import dev.balusharma.urlshortener.infrastructure.configuration.JwtProperties;
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.RefreshTokenRepository;
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.UserRepository;
+import dev.balusharma.urlshortener.presentation.dto.request.LogoutRequest;
+import dev.balusharma.urlshortener.presentation.dto.request.RefreshRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,11 +90,4 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    public record RefreshRequest(
-            @NotBlank String refreshToken
-    ) {}
-
-    public record LogoutRequest(
-            @NotBlank String refreshToken
-    ) {}
 }
