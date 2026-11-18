@@ -1,8 +1,14 @@
 package dev.balusharma.urlshortener.application.exception;
 
-public class DuplicateShortCodeException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class DuplicateShortCodeException extends ApplicationException {
 
     public DuplicateShortCodeException(String code) {
-        super("Short code '" + code + "' already exists.");
+        String message =  "Short code '" + code + "' already exists.";
+        super(
+                HttpStatus.CONFLICT,
+                message
+        );
     }
 }
