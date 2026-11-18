@@ -1,5 +1,6 @@
 package dev.balusharma.urlshortener.application.service;
 
+import dev.balusharma.urlshortener.application.exception.DuplicateShortCodeException;
 import dev.balusharma.urlshortener.application.exception.ShortCodeGenerationFailedException;
 import dev.balusharma.urlshortener.application.exception.UrlAlreadyShortenedException;
 import dev.balusharma.urlshortener.application.exception.UrlNotFoundException;
@@ -61,9 +62,9 @@ public class ShortUrlService {
                         userId
                 ).get();
             }
-            catch (Exception ex) {
+            catch (DuplicateShortCodeException ex) {
                 if (attempt == MAX_RETRIES) {
-                    throw new ShortCodeGenerationFailedException(
+                    throw new DuplicateShortCodeException(
                             "Failed after " + MAX_RETRIES + " attempts"
                     );
                 }
