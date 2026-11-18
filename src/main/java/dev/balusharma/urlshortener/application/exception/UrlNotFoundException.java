@@ -1,8 +1,13 @@
 package dev.balusharma.urlshortener.application.exception;
 
-public class UrlNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UrlNotFoundException extends ApplicationException {
 
     public UrlNotFoundException(String shortUrl) {
-        super("Short URL not found: " + shortUrl);
+        super(
+                HttpStatus.NOT_FOUND,
+                "Short URL not found: " + shortUrl
+        );
     }
 }

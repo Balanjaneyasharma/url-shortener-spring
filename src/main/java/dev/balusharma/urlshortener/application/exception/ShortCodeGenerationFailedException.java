@@ -1,8 +1,13 @@
 package dev.balusharma.urlshortener.application.exception;
 
-public class ShortCodeGenerationFailedException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class ShortCodeGenerationFailedException extends ApplicationException {
 
     public ShortCodeGenerationFailedException(String message) {
-        super(message);
+        super(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                message
+        );
     }
 }
