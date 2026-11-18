@@ -1,6 +1,7 @@
 package dev.balusharma.urlshortener.infrastructure.persistence.repository;
 
 import dev.balusharma.urlshortener.domain.model.User;
+import dev.balusharma.urlshortener.infrastructure.persistence.queries.UserQueries;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -29,11 +30,7 @@ public class UserRepository {
 
     public Optional<User> findByGoogleId(String googleId) {
         return jdbcTemplate.query(
-                """
-                SELECT "Id", "Email", "GoogleId", "Name", "CreatedAt"
-                FROM "users"
-                WHERE "GoogleId" = ?
-                """,
+                UserQueries.selectUserByGoogleId,
                 rowMapper,
                 googleId
         ).stream().findFirst();
@@ -47,12 +44,7 @@ public class UserRepository {
         Instant now = Instant.now();
 
         Integer id = jdbcTemplate.queryForObject(
-                """
-                INSERT INTO "users"
-                    ("Email", "GoogleId", "Name", "CreatedAt")
-                VALUES (?, ?, ?, ?)
-                RETURNING "Id"
-                """,
+                UserQueries.insertUser,
                 Integer.class,
                 email,
                 googleId,

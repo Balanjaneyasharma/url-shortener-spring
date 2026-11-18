@@ -42,14 +42,12 @@ public class ShortUrlService {
             String longUrl
     ) {
         String hashedLongUrl = this.hashGenerator.generateHash(longUrl);
-
-        Optional<String> existingShortUrl = this.shortUrlRepository.getShortUrlByHashedLongUrl(hashedLongUrl);
+        Integer userId = this.currentUserProvider.getCurrentUser().userId();
+        Optional<String> existingShortUrl = this.shortUrlRepository.getShortUrlByHashedLongUrl(hashedLongUrl, userId);
 
         if(existingShortUrl.isPresent()) {
             throw new UrlAlreadyShortenedException(longUrl, existingShortUrl.get());
         }
-
-        Integer userId = this.currentUserProvider.getCurrentUser().userId();
 
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
 
@@ -80,8 +78,10 @@ public class ShortUrlService {
             String shortUrl
     ) {
         Integer userId = this.currentUserProvider.getCurrentUser().userId();
+        String hashedLongURl = this.hashGenerator.generateHash(updatedLongUrl);
         return this.shortUrlRepository.updateLongUrl(
                     updatedLongUrl,
+                    hashedLongURl,
                     shortUrl,
                     userId
             );
