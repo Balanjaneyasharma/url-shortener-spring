@@ -17,8 +17,7 @@ public final class ShortUrlQueries {
     public static final String selectLongUrlByShortUrl = """
             SELECT longUrl
             From ShortUrlTable
-            WHERE shortUrl = :shortUrl
-                AND userId = :userId;
+            WHERE shortUrl = :shortUrl;
     """;
 
     public static final String selectShortUrlByHashedLongUrl = """

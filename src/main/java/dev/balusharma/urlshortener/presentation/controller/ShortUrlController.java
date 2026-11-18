@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/url-short")
@@ -27,20 +26,10 @@ public class ShortUrlController {
           @Valid @RequestBody CreateUrlShortRequest shortUrlRequest
     ) {
         return ResponseEntity
-                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .status(HttpStatus.CREATED)
                 .body(shortUrlService.createShortUrl(shortUrlRequest.longUrl()));
     }
 
-    @GetMapping("/{shortUrl}")
-    public ResponseEntity<Void> getActualUrlByShortUrl(
-            @PathVariable String shortUrl
-    ) {
-        String longUrl = this.shortUrlService.getLongUrlByShortUrl(shortUrl);
-        return ResponseEntity
-                .status(HttpStatus.PERMANENT_REDIRECT)
-                .location(URI.create(longUrl))
-                .build();
-    }
 
     @PutMapping
     public ResponseEntity<String> updateUrl(

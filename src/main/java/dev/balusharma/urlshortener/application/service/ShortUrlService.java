@@ -33,9 +33,8 @@ public class ShortUrlService {
     public String getLongUrlByShortUrl(
             String shortUrl
     ) {
-        Integer userId = this.currentUserProvider.getCurrentUser().userId();
         return this.shortUrlRepository
-                .getLongUrlByShortUrl(shortUrl, userId)
+                .getLongUrlByShortUrl(shortUrl)
                 .orElseThrow(() -> new UrlNotFoundException(shortUrl));
     }
 

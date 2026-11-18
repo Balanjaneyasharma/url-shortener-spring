@@ -24,13 +24,11 @@ public class ShortUrlRepository {
     }
 
     public Optional<String> getLongUrlByShortUrl(
-            String shortUrl,
-            Integer userId
+            String shortUrl
     ) {
         String selectLongUrlSql = ShortUrlQueries.selectLongUrlByShortUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("shortUrl", shortUrl)
-                .addValue("userId", userId);
+                .addValue("shortUrl", shortUrl);
         try {
             String longUrl = this.jdbcTemplate.queryForObject(
                     selectLongUrlSql,
@@ -101,7 +99,7 @@ public class ShortUrlRepository {
             return Optional.ofNullable(shortUrl);
         }
         catch(Exception ex) {
-            return Optional.of("");
+            throw ex;
         }
 
     }
