@@ -14,21 +14,24 @@ public final class ShortUrlQueries {
             VALUES (:longUrl, :shortUrl, :hashedLongUrl, :userId);
     """;
 
-    public static final String selectLongUrl = """
-            SELECT LongUrl
+    public static final String selectLongUrlByShortUrl = """
+            SELECT longUrl
             From ShortUrlTable
-            WHERE shortUrl = :shortUrl;
+            WHERE shortUrl = :shortUrl
+                AND userId = :userId;
     """;
 
-    public static final String selectShortURl = """
+    public static final String selectShortUrlByHashedLongUrl = """
             SELECT shortUrl
             FROM ShortUrlTable
-            WHERE  hashedLongUrl = :hashedLongUrl;
+            WHERE  hashedLongUrl = :hashedLongUrl
+                   AND userId = :userId;
     """;
 
     public static final String updateLongUrl = """
             UPDATE ShortUrlTable
-            SET longUrl = :updatedLongUrl
+            SET longUrl = :longUrl,
+                hashedLongUrl = :hashedLongUrl
             WHERE shortUrl =:shortUrl
             AND userId = :userId;
     """;

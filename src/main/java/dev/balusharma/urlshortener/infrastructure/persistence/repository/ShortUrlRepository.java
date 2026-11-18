@@ -24,11 +24,13 @@ public class ShortUrlRepository {
     }
 
     public Optional<String> getLongUrlByShortUrl(
-            String shortUrl
+            String shortUrl,
+            Integer userId
     ) {
-        String selectLongUrlSql = ShortUrlQueries.selectLongUrl;
+        String selectLongUrlSql = ShortUrlQueries.selectLongUrlByShortUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("short-url", shortUrl);
+                .addValue("shortUrl", shortUrl)
+                .addValue("userId", userId);
         try {
             String longUrl = this.jdbcTemplate.queryForObject(
                     selectLongUrlSql,
@@ -52,7 +54,7 @@ public class ShortUrlRepository {
         String insertShortUrlSql = ShortUrlQueries.insertShortUrl;
         MapSqlParameterSource insertParameters = new MapSqlParameterSource()
                 .addValue("longUrl", longUrl)
-                .addValue("short-url", shortUrl)
+                .addValue("shortUrl", shortUrl)
                 .addValue("hashedLongUrl", hashedLongUrl)
                 .addValue("userId", userId);
 
@@ -81,13 +83,15 @@ public class ShortUrlRepository {
 
     public Optional<String> updateLongUrl(
             String updatedLongUrl,
+            String hashedLongURl,
             String shortUrl,
             Integer userId
     ) {
         String updateLongUrlSql = ShortUrlQueries.updateLongUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("updatedLongUrl", updatedLongUrl)
-                .addValue("short-url", shortUrl)
+                .addValue("longUrl", updatedLongUrl)
+                .addValue("hashedLongUrl", hashedLongURl)
+                .addValue("shortUrl", shortUrl)
                 .addValue("userId", userId);
         try {
             this.jdbcTemplate.update(
@@ -103,11 +107,13 @@ public class ShortUrlRepository {
     }
 
     public Optional<String> getShortUrlByHashedLongUrl(
-            String hashedLongUrl
+            String hashedLongUrl,
+            Integer userId
     ) {
-        String selectShortUrlSql = ShortUrlQueries.selectShortURl;
+        String selectShortUrlSql = ShortUrlQueries.selectShortUrlByHashedLongUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("hashedLongUrl", hashedLongUrl);
+                .addValue("hashedLongUrl", hashedLongUrl)
+                .addValue("userId", userId);
         try {
             String shortUrl = this.jdbcTemplate.queryForObject(
                     selectShortUrlSql,

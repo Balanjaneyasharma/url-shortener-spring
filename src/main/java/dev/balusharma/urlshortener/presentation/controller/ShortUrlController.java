@@ -27,11 +27,11 @@ public class ShortUrlController {
           @Valid @RequestBody CreateUrlShortRequest shortUrlRequest
     ) {
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.TEMPORARY_REDIRECT)
                 .body(shortUrlService.createShortUrl(shortUrlRequest.longUrl()));
     }
 
-    @GetMapping("/{short-url}")
+    @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getActualUrlByShortUrl(
             @PathVariable String shortUrl
     ) {
