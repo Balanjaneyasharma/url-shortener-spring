@@ -2,7 +2,7 @@ package dev.balusharma.urlshortener.infrastructure.persistence.repository;
 
 import dev.balusharma.urlshortener.application.exception.DuplicateShortCodeException;
 import dev.balusharma.urlshortener.infrastructure.persistence.constants.ShortUrlDbConstraints;
-import dev.balusharma.urlshortener.infrastructure.persistence.sql.SqlFileLoader;
+import dev.balusharma.urlshortener.infrastructure.persistence.queries.ShortUrlQueries;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,22 +16,17 @@ import java.util.Optional;
 public class ShortUrlRepository {
 
     private final NamedParameterJdbcTemplate  jdbcTemplate;
-    private final SqlFileLoader sqlFileLoader;
 
     public ShortUrlRepository(
-            NamedParameterJdbcTemplate jdbcTemplate,
-            SqlFileLoader sqlFileLoader
+            NamedParameterJdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.sqlFileLoader = sqlFileLoader;
     }
 
     public Optional<String> getLongUrlByShortUrl(
             String shortUrl
     ) {
-        String selectLongUrlSql = this.sqlFileLoader.load(
-                "sql/queries/short-url/select-long-url.sql"
-        );
+        String selectLongUrlSql = ShortUrlQueries.selectLongUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("short-url", shortUrl);
         try {
@@ -54,9 +49,7 @@ public class ShortUrlRepository {
             String hashedLongUrl,
             Integer userId
     ) {
-        String insertShortUrlSql = this.sqlFileLoader.load(
-                "sql/queries/short-url/insert-short-url.sql"
-        );
+        String insertShortUrlSql = ShortUrlQueries.insertShortUrl;
         MapSqlParameterSource insertParameters = new MapSqlParameterSource()
                 .addValue("longUrl", longUrl)
                 .addValue("short-url", shortUrl)
@@ -91,9 +84,7 @@ public class ShortUrlRepository {
             String shortUrl,
             Integer userId
     ) {
-        String updateLongUrlSql = this.sqlFileLoader.load(
-                "sql/queries/short-url/update-long-url.sql"
-        );
+        String updateLongUrlSql = ShortUrlQueries.updateLongUrl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("updatedLongUrl", updatedLongUrl)
                 .addValue("short-url", shortUrl)
@@ -114,9 +105,7 @@ public class ShortUrlRepository {
     public Optional<String> getShortUrlByHashedLongUrl(
             String hashedLongUrl
     ) {
-        String selectShortUrlSql = this.sqlFileLoader.load(
-                "sql/queries/short-url/select-short-url.sql"
-        );
+        String selectShortUrlSql = ShortUrlQueries.selectShortURl;
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("hashedLongUrl", hashedLongUrl);
         try {
