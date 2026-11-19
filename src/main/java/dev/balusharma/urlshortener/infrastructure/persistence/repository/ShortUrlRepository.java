@@ -79,7 +79,7 @@ public class ShortUrlRepository {
 
     }
 
-    public Optional<String> updateLongUrl(
+    public Optional<Integer> updateLongUrl(
             String updatedLongUrl,
             String hashedLongURl,
             String shortUrl,
@@ -92,11 +92,11 @@ public class ShortUrlRepository {
                 .addValue("shortUrl", shortUrl)
                 .addValue("userId", userId);
         try {
-            this.jdbcTemplate.update(
+            Integer result = this.jdbcTemplate.update(
                     updateLongUrlSql,
                     parameters
             );
-            return Optional.ofNullable(shortUrl);
+            return Optional.ofNullable(result);
         }
         catch(Exception ex) {
             throw ex;

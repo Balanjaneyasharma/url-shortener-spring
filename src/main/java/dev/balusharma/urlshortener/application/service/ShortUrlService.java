@@ -80,11 +80,17 @@ public class ShortUrlService {
     ) {
         Integer userId = this.currentUserProvider.getCurrentUser().userId();
         String hashedLongURl = this.hashGenerator.generateHash(updatedLongUrl);
-        return this.shortUrlRepository.updateLongUrl(
+        Integer result = this.shortUrlRepository.updateLongUrl(
                     updatedLongUrl,
                     hashedLongURl,
                     shortUrl,
                     userId
-            );
+            ).get();
+
+        if(result == 0) {
+            throw new UrlNotFoundException(shortUrl);
+        }
+
+        return Optional.of(shortUrl);
     }
 }
