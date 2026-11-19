@@ -64,7 +64,7 @@ public class ShortUrlService {
             }
             catch (DuplicateShortCodeException ex) {
                 if (attempt == MAX_RETRIES) {
-                    throw new DuplicateShortCodeException(
+                    throw new ShortCodeGenerationFailedException(
                             "Failed after " + MAX_RETRIES + " attempts"
                     );
                 }
