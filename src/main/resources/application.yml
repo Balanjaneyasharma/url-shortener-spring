@@ -15,11 +15,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}${app.oauth2.callback-uri}"
             scope:
               - openid
               - profile
               - email
 app:
+  oauth2:
+    callback-uri: /oauth/google/callback
   security:
     jwt:
       secret: ${JWT_SECRET}
