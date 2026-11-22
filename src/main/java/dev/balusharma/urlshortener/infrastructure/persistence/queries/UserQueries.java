@@ -5,7 +5,7 @@ public final  class UserQueries {
     private UserQueries() {}
 
     public static  final  String insertUser = """
-            INSERT INTO "users"
+            INSERT INTO "Users"
             ("Email", "GoogleId", "Name", "CreatedAt")
             VALUES (?, ?, ?, ?)
             RETURNING "Id";
@@ -13,7 +13,7 @@ public final  class UserQueries {
 
     public static final String selectUserByGoogleId = """
             SELECT "Id", "Email", "GoogleId", "Name", "CreatedAt"
-            FROM "users"
+            FROM "Users"
             WHERE "GoogleId" = ?;
     """;
 }
