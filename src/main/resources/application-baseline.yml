@@ -1,0 +1,6 @@
+spring:
+  flyway:
+    # Use this profile only once against the already-existing Neon schema.
+    # It records the current schema as version 4 without executing V1-V4.
+    baseline-on-migrate: true
+    baseline-version: 4
