@@ -5,33 +5,33 @@ public final class ShortUrlQueries {
     private ShortUrlQueries() {}
 
     public static final String insertShortUrl = """
-            INSERT INTO ShortUrlTable (
-                    longUrl,
-                    shortUrl,
-                    hashedLongUrl,
-                    userId
+            INSERT INTO "ShortUrlTable" (
+                        "LongUrl",
+                        "ShortUrl",
+                        "HashedLongUrl",
+                        "UserId"
             )
             VALUES (:longUrl, :shortUrl, :hashedLongUrl, :userId);
     """;
 
     public static final String selectLongUrlByShortUrl = """
-            SELECT longUrl
-            From ShortUrlTable
-            WHERE shortUrl = :shortUrl;
+            SELECT "LongUrl"
+            From "ShortUrlTable"
+            WHERE "ShortUrl" = :shortUrl;
     """;
 
     public static final String selectShortUrlByHashedLongUrl = """
-            SELECT shortUrl
-            FROM ShortUrlTable
-            WHERE  hashedLongUrl = :hashedLongUrl
-                   AND userId = :userId;
+            SELECT "ShortUrl"
+            FROM "ShortUrlTable"
+            WHERE "HashedLongUrl" = :hashedLongUrl
+                   AND "UserId" = :userId;
     """;
 
     public static final String updateLongUrl = """
-            UPDATE ShortUrlTable
-            SET longUrl = :longUrl,
-                hashedLongUrl = :hashedLongUrl
-            WHERE shortUrl =:shortUrl
-            AND userId = :userId;
+            UPDATE "ShortUrlTable"
+            SET "LongUrl" = :longUrl,
+                "HashedLongUrl = :hashedLongUrl
+            WHERE "ShortUrl" =:shortUrl
+            AND "UserId" = :userId;
     """;
 }
