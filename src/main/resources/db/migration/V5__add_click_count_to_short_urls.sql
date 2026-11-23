@@ -1,0 +1,2 @@
+ALTER TABLE "ShortUrlTable"
+    ADD COLUMN "ClickCount" BIGINT NOT NULL DEFAULT 0;
