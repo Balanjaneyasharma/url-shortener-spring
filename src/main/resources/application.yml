@@ -34,8 +34,12 @@ spring:
               - profile
               - email
 app:
+  cache:
+    short-url-ttl: 1h
+
   oauth2:
     callback-uri: /oauth/google/callback
+
   security:
     jwt:
       secret: ${JWT_SECRET}

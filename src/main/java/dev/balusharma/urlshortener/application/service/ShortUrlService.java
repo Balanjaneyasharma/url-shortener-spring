@@ -4,6 +4,8 @@ import dev.balusharma.urlshortener.application.exception.DuplicateShortCodeExcep
 import dev.balusharma.urlshortener.application.exception.ShortCodeGenerationFailedException;
 import dev.balusharma.urlshortener.application.exception.UrlAlreadyShortenedException;
 import dev.balusharma.urlshortener.application.exception.UrlNotFoundException;
+import dev.balusharma.urlshortener.infrastructure.cache.repository.ClickCountCacheRepository;
+import dev.balusharma.urlshortener.infrastructure.cache.repository.ShortUrlCacheRepository;
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.ShortUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +23,31 @@ public class ShortUrlService {
     private HashGenerator hashGenerator;
     @Autowired
     private ShortCodeGenerator shortCodeGenerator;
+    @Autowired
+    private ShortUrlCacheRepository shortUrlCacheRepository;
+    @Autowired
+    private ClickCountCacheRepository clickCountCacheRepository;
 
     private static final int MAX_RETRIES = 3;
 
     public String getLongUrlByShortUrl(
             String shortUrl
     ) {
-        return this.shortUrlRepository
-                .getLongUrlByShortUrl(shortUrl)
-                .orElseThrow(() -> new UrlNotFoundException(shortUrl));
+        String longUrl = shortUrlCacheRepository
+                .getLongUrl(shortUrl)
+                .orElseGet(() -> {
+                    String url = shortUrlRepository
+                            .getLongUrlByShortUrl(shortUrl)
+                            .orElseThrow(() -> new UrlNotFoundException(shortUrl));
+
+                    shortUrlCacheRepository.save(shortUrl, url);
+
+                    return url;
+                });
+
+        clickCountCacheRepository.increment(shortUrl);
+
+        return longUrl;
     }
 
     public String createShortUrl(
