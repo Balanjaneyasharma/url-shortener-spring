@@ -9,6 +9,7 @@ import dev.balusharma.urlshortener.infrastructure.persistence.repository.UserRep
 import dev.balusharma.urlshortener.presentation.dto.request.LogoutRequest;
 import dev.balusharma.urlshortener.presentation.dto.request.RefreshRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,14 @@ import java.time.Instant;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtService jwtService;
-    private final JwtProperties jwtProperties;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private JwtProperties jwtProperties;
 
     public AuthController(
             UserRepository userRepository,

@@ -4,6 +4,7 @@ import dev.balusharma.urlshortener.application.service.ShortUrlService;
 import dev.balusharma.urlshortener.presentation.dto.request.CreateUrlShortRequest;
 import dev.balusharma.urlshortener.presentation.dto.request.UpdateUrlRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/url-short")
 public class ShortUrlController {
 
-    private final ShortUrlService shortUrlService;
-
-    public ShortUrlController(
-            ShortUrlService shortUrlService
-    ) {
-        this.shortUrlService = shortUrlService;
-    }
+    @Autowired
+    private ShortUrlService shortUrlService;
 
     @PostMapping
     public ResponseEntity<String> createShortUrl(
@@ -29,7 +25,6 @@ public class ShortUrlController {
                 .status(HttpStatus.CREATED)
                 .body(shortUrlService.createShortUrl(shortUrlRequest.longUrl()));
     }
-
 
     @PutMapping
     public ResponseEntity<String> updateUrl(

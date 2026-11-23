@@ -1,5 +1,6 @@
 package dev.balusharma.urlshortener.infrastructure.persistence.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -10,11 +11,9 @@ import java.util.Optional;
 @Repository
 public class RefreshTokenRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public RefreshTokenRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void create(
             Integer userId,
