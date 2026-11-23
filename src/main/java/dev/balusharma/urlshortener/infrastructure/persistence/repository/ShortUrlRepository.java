@@ -3,6 +3,7 @@ package dev.balusharma.urlshortener.infrastructure.persistence.repository;
 import dev.balusharma.urlshortener.application.exception.DuplicateShortCodeException;
 import dev.balusharma.urlshortener.infrastructure.persistence.constants.ShortUrlDbConstraints;
 import dev.balusharma.urlshortener.infrastructure.persistence.queries.ShortUrlQueries;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,13 +16,8 @@ import java.util.Optional;
 @Repository()
 public class ShortUrlRepository {
 
-    private final NamedParameterJdbcTemplate  jdbcTemplate;
-
-    public ShortUrlRepository(
-            NamedParameterJdbcTemplate jdbcTemplate
-    ) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired
+    private NamedParameterJdbcTemplate  jdbcTemplate;
 
     public Optional<String> getLongUrlByShortUrl(
             String shortUrl

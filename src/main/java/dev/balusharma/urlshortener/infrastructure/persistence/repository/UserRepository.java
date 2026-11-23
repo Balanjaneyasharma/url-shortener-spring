@@ -2,6 +2,7 @@ package dev.balusharma.urlshortener.infrastructure.persistence.repository;
 
 import dev.balusharma.urlshortener.domain.model.User;
 import dev.balusharma.urlshortener.infrastructure.persistence.queries.UserQueries;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,8 @@ import java.util.Optional;
 @Repository
 public class UserRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<User> rowMapper = (rs, _) ->
             new User(
@@ -23,10 +25,6 @@ public class UserRepository {
                     rs.getString("Name"),
                     rs.getTimestamp("CreatedAt").toInstant()
             );
-
-    public UserRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Optional<User> findByGoogleId(String googleId) {
         return jdbcTemplate.query(

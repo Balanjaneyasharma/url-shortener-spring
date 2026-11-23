@@ -1,6 +1,7 @@
 package dev.balusharma.urlshortener.application.service;
 
 import dev.balusharma.urlshortener.infrastructure.configuration.JwtProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service()
 public class JwtService {
+
     private static final String NAME_IDENTIFIER =
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
@@ -23,17 +25,12 @@ public class JwtService {
     private static final String NAME =
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
 
-    private final JwtEncoder jwtEncoder;
-    private final JwtProperties jwtProperties;
-    private final SecureRandom secureRandom = new SecureRandom();
+    @Autowired
+    private JwtEncoder jwtEncoder;
+    @Autowired
+    private JwtProperties jwtProperties;
 
-    public JwtService(
-            JwtEncoder jwtEncoder,
-            JwtProperties jwtProperties
-    ) {
-        this.jwtEncoder = jwtEncoder;
-        this.jwtProperties = jwtProperties;
-    }
+    private final SecureRandom secureRandom = new SecureRandom();
 
     public String generateAccessToken(
             int userId,

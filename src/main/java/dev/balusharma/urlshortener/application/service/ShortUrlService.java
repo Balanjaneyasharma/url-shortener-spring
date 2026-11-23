@@ -5,6 +5,7 @@ import dev.balusharma.urlshortener.application.exception.ShortCodeGenerationFail
 import dev.balusharma.urlshortener.application.exception.UrlAlreadyShortenedException;
 import dev.balusharma.urlshortener.application.exception.UrlNotFoundException;
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.ShortUrlRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,24 +13,16 @@ import java.util.Optional;
 @Service()
 public class ShortUrlService {
 
-    private final ShortUrlRepository shortUrlRepository;
-    private final CurrentUserProvider currentUserProvider;
-    private final HashGenerator hashGenerator;
-    private  final ShortCodeGenerator shortCodeGenerator;
+    @Autowired
+    private ShortUrlRepository shortUrlRepository;
+    @Autowired
+    private CurrentUserProvider currentUserProvider;
+    @Autowired
+    private HashGenerator hashGenerator;
+    @Autowired
+    private ShortCodeGenerator shortCodeGenerator;
 
     private static final int MAX_RETRIES = 3;
-
-    public ShortUrlService(
-            ShortUrlRepository shortUrlRepository,
-            CurrentUserProvider currentUserProvider,
-            HashGenerator hashGenerator,
-            ShortCodeGenerator shortCodeGenerator
-    ) {
-        this.shortUrlRepository = shortUrlRepository;
-        this.currentUserProvider = currentUserProvider;
-        this.hashGenerator = hashGenerator;
-        this.shortCodeGenerator = shortCodeGenerator;
-    }
 
     public String getLongUrlByShortUrl(
             String shortUrl

@@ -2,6 +2,7 @@ package dev.balusharma.urlshortener.presentation.controller;
 
 import dev.balusharma.urlshortener.application.service.ShortUrlService;
 import dev.balusharma.urlshortener.presentation.validation.ValidShortUrl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,13 +16,8 @@ import java.net.URI;
 @Validated
 public class RedirectController {
 
-    private final ShortUrlService shortUrlService;
-
-    public RedirectController(
-            ShortUrlService shortUrlService
-    ) {
-        this.shortUrlService =shortUrlService;
-    }
+    @Autowired
+    private ShortUrlService shortUrlService;
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> redirect(
