@@ -15,6 +15,12 @@ spring:
     baseline-version: 4
     clean-disabled: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2s
+
   security:
     oauth2:
       client:
