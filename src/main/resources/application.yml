@@ -47,3 +47,7 @@ app:
       audience: ${JWT_AUDIENCE}
       access-token-expiry-minutes: ${JWT_ACCESS_TOKEN_EXPIRY_MINUTES}
       refresh-token-expiry-days: ${JWT_REFRESH_TOKEN_EXPIRY_DAYS}
+
+click-count:
+  worker:
+    fixed-delay: 10000
