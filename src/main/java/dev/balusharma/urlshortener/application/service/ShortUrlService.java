@@ -9,11 +9,15 @@ import dev.balusharma.urlshortener.infrastructure.cache.repository.ShortUrlCache
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.ShortUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 @Service()
 public class ShortUrlService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShortUrlService.class);
 
     @Autowired
     private ShortUrlRepository shortUrlRepository;
@@ -33,19 +37,28 @@ public class ShortUrlService {
     public String getLongUrlByShortUrl(
             String shortUrl
     ) {
-        String longUrl = shortUrlCacheRepository
-                .getLongUrl(shortUrl)
-                .orElseGet(() -> {
-                    String url = shortUrlRepository
-                            .getLongUrlByShortUrl(shortUrl)
-                            .orElseThrow(() -> new UrlNotFoundException(shortUrl));
+        String longUrl = null;
+        try {
+            longUrl = shortUrlCacheRepository.getLongUrl(shortUrl).orElse(null);
+        } catch (RuntimeException ex) {
+            logger.warn("Short URL cache lookup failed; falling back to database for {}", shortUrl, ex);
+        }
 
-                    shortUrlCacheRepository.save(shortUrl, url);
+        if (longUrl == null) {
+            longUrl = shortUrlRepository.getLongUrlByShortUrl(shortUrl)
+                    .orElseThrow(() -> new UrlNotFoundException(shortUrl));
+            try {
+                shortUrlCacheRepository.save(shortUrl, longUrl);
+            } catch (RuntimeException ex) {
+                logger.warn("Unable to cache resolved short URL {}", shortUrl, ex);
+            }
+        }
 
-                    return url;
-                });
-
-        clickCountCacheRepository.increment(shortUrl);
+        try {
+            clickCountCacheRepository.increment(shortUrl);
+        } catch (RuntimeException ex) {
+            logger.warn("Unable to record click for short URL {}", shortUrl, ex);
+        }
 
         return longUrl;
     }

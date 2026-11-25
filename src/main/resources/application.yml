@@ -33,6 +33,7 @@ spring:
               - openid
               - profile
               - email
+
 app:
   cache:
     short-url-ttl: 1h
@@ -51,3 +52,5 @@ app:
 click-count:
   worker:
     fixed-delay: 10000
+    cleanup-fixed-delay: 86400000 # run daily
+    batch-retention-days: 7

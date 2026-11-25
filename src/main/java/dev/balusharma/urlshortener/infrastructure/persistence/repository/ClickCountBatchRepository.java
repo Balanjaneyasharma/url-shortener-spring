@@ -10,9 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Repository
 public class ClickCountBatchRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClickCountBatchRepository.class);
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -43,14 +47,20 @@ public class ClickCountBatchRepository {
                             .addValue("count", entry.getValue())
             );
 
-            if (updated != 1) {
-                throw new IllegalStateException(
-                        "Unable to update click count for: "
-                                + entry.getKey()
-                );
+            if (updated == 0) {
+                logger.warn("Skipping click count for missing short URL {} in batch {}", entry.getKey(), batchId);
+            } else if (updated != 1) {
+                throw new IllegalStateException("Unexpected row count updating click count for " + entry.getKey());
             }
         }
 
         return true;
+    }
+
+    public int deleteProcessedBatchesOlderThan(int retentionDays) {
+        return jdbcTemplate.update(
+                ClicksCountBatchQueries.deleteOldClickCountBatches,
+                new MapSqlParameterSource().addValue("retentionDays", retentionDays)
+        );
     }
 }
