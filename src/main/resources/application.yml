@@ -15,6 +15,12 @@ spring:
     baseline-version: 4
     clean-disabled: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2s
+
   security:
     oauth2:
       client:
@@ -28,8 +34,12 @@ spring:
               - profile
               - email
 app:
+  cache:
+    short-url-ttl: 1h
+
   oauth2:
     callback-uri: /oauth/google/callback
+
   security:
     jwt:
       secret: ${JWT_SECRET}
@@ -37,3 +47,7 @@ app:
       audience: ${JWT_AUDIENCE}
       access-token-expiry-minutes: ${JWT_ACCESS_TOKEN_EXPIRY_MINUTES}
       refresh-token-expiry-days: ${JWT_REFRESH_TOKEN_EXPIRY_DAYS}
+
+click-count:
+  worker:
+    fixed-delay: 10000

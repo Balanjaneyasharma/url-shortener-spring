@@ -34,4 +34,11 @@ public final class ShortUrlQueries {
             WHERE "ShortUrl" =:shortUrl
             AND "UserId" = :userId;
     """;
+
+    public static final String incrementClicksCount = """
+            UPDATE "ShortUrlTable"
+            SET
+                "ClickCount" = "ClickCount" + :count
+            WHERE "ShortUrl" = :shortUrl
+    """;
 }
