@@ -4,34 +4,56 @@ import dev.balusharma.urlshortener.infrastructure.cache.repository.ClickCountCac
 import dev.balusharma.urlshortener.infrastructure.persistence.repository.ClickCountBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
 @Service
 public class ClickCountProcessingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ClickCountProcessingService.class);
+
     @Autowired
-    private ClickCountCacheRepository cacheRepository;
+    private ClickCountCacheRepository clicksCountCacheRepository;
     @Autowired
-    private ClickCountBatchRepository batchRepository;
+    private ClickCountBatchRepository clickCountBatchRepository;
+
+    @Value("${click-count.worker.batch-retention-days}")
+    private int batchRetentionDays;
 
     public void processPendingBatch() {
 
-        String batchId = cacheRepository.claimBatch();
+        // A single Redis pending key serializes all application instances. Other instances
+        // can see the same batch and safely retry it because database processing is idempotent.
+        String batchId = clicksCountCacheRepository.claimBatch();
 
         if (batchId == null) {
             return;
         }
 
         Map<String, Long> clickCounts =
-                cacheRepository.getBatch(batchId);
+                clicksCountCacheRepository.getBatch(batchId);
 
         if (clickCounts.isEmpty()) {
+            logger.warn("Acknowledging empty click count batch {}", batchId);
+            acknowledge(batchId);
             return;
         }
 
-        batchRepository.processBatch(batchId, clickCounts);
+        clickCountBatchRepository.processBatch(batchId, clickCounts);
 
-        cacheRepository.acknowledgeBatch(batchId);
+        acknowledge(batchId);
+    }
+
+    private void acknowledge(String batchId) {
+        if (!clicksCountCacheRepository.acknowledgeBatch(batchId)) {
+            logger.warn("Click count batch {} was processed but Redis did not acknowledge it", batchId);
+        }
+    }
+
+    public int cleanupProcessedBatches() {
+        return clickCountBatchRepository.deleteProcessedBatchesOlderThan(batchRetentionDays);
     }
 }

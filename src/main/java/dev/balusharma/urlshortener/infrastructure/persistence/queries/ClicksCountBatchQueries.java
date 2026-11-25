@@ -11,4 +11,9 @@ public final class ClicksCountBatchQueries {
             VALUES (:batchId)
             ON CONFLICT ("BatchId") DO NOTHING
     """;
+
+    public static final String deleteOldClickCountBatches = """
+            DELETE FROM "ClickCountBatch"
+            WHERE "ProcessedAt" < CURRENT_TIMESTAMP - (:retentionDays * INTERVAL '1 day')
+    """;
 }
